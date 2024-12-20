@@ -9,6 +9,8 @@ import {
 import ReactHowler from 'react-howler'
 import { toast } from 'sonner'
 
+import { env } from '@/env'
+
 interface RadioPlayerProps {
   url: string
   paused: boolean
@@ -25,7 +27,7 @@ export const RadioPlayer = forwardRef<RadioPlayerHandleProps, RadioPlayerProps>(
     const [playingMp3, setPlayingMp3] = useState(false)
     const audioRefHLS = useRef<HTMLAudioElement | null>(null)
 
-    const transformedUrl = `${process.env.REACT_APP_STREAM_PROXY_URL}?url=${encodeURIComponent(url)}`
+    const transformedUrl = `${env.VITE_REACT_APP_STREAM_PROXY_URL}?url=${encodeURIComponent(url)}`
 
     useEffect(() => {
       setIsHls(url.endsWith('.m3u8'))
