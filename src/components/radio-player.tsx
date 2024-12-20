@@ -29,11 +29,31 @@ export const RadioPlayer = forwardRef<RadioPlayerHandleProps, RadioPlayerProps>(
       setIsHls(url.endsWith('.m3u8'))
     }, [url])
 
-    const handlePlay = () => {
+    const handlePlay = async () => {
       if (isHls && audioRefHLS.current) {
-        audioRefHLS.current.play().catch(() => {
+        try {
+          if (audioRefHLS.current.readyState < 3) {
+            await new Promise((resolve, reject) => {
+              const onCanPlay = () => {
+                audioRefHLS.current?.removeEventListener('canplay', onCanPlay)
+                resolve(true)
+              }
+
+              const onError = () => {
+                audioRefHLS.current?.removeEventListener('error', onError)
+                reject(new Error('Error while loading audio'))
+              }
+
+              audioRefHLS.current?.addEventListener('canplay', onCanPlay)
+              audioRefHLS.current?.addEventListener('error', onError)
+            })
+          }
+
+          await audioRefHLS.current.play()
+        } catch (err) {
+          console.log(err)
           toast.error('Error when playing.')
-        })
+        }
       } else {
         setPlayingMp3(true)
       }
@@ -75,7 +95,9 @@ export const RadioPlayer = forwardRef<RadioPlayerHandleProps, RadioPlayerProps>(
     return (
       <div className="hidden">
         {isHls ? (
-          <audio ref={audioRefHLS}>Seu navegador não suporta HLS.</audio>
+          <audio ref={audioRefHLS} controls>
+            Seu navegador não suporta HLS.
+          </audio>
         ) : (
           <ReactHowler src={url} html5 playing={playingMp3} />
         )}
