@@ -1,19 +1,34 @@
-Obrigatório 1 - Você deverá atender aos seguintes casos de uso:
+# Radio Browser
 
-[x] Como usuário, posso adicionar uma rádio na minha lista;
-[x] Como usuário, ver minha lista de rádios adicionadas;
-[x] Como usuário, posso remover uma rádio da minha lista;
-[x] Como usuário posso editar informações da rádio escolhida; 
-[x] Como usuário, posso ouvir a rádio selecionado ao clicar o play;
-[x] Como usuário, posso parar de ouvir a rádio selecionada ao clicar no stop;
-[x] Como usuário, posso pesquisar a rádio que tenho interesse.
-[x] Obrigatório 2 - Filtrar por nome da rádio, país ou idioma com paginação mostrando 10 rádios por vez.
+This project aims to reproduce online radio according to the user's taste. You can list different radio stations around the world, add favorites and play them freely.
 
-[x] Obrigatório 3 - Salvar as informações para quando o usuário retornar na aplicação deve ter as rádios salvas.
+> This is a challenge by [Coodesh](https://coodesh.com/)
+
+## Framework and languages used:
+
+- React with Vite
+- TailwindCSS
+- React Query
+- Shadcn UI
+- Zod
+- Eslint & Prettier
+- Typescript
+- Axios
 
 
-Diferencial 1 - Escrever Unit Tests ou E2E Test. Escolher a melhor abordagem e biblioteca;
+## Instructions for execute this project:
 
-Diferencial 2 - Configurar Docker no Projeto para facilitar o Deploy da equipe de DevOps;
-
-Diferencial 3 - Publique o projeto em alguma plataforma, como por exemplo a Vercel, Netlify ou outra de sua preferência.
+- Step one:
+  - clone this repo: https://github.com/natanhermes/frontend-radio-browser.git
+- Step two:
+  - use pnpm version 9.15.0 and run development mode: 
+    ```shell
+    cd frontend-radio-browser && pnpm install
+    ```
+    ```shell
+    pnpm run dev
+    ```
+  - run production mode with preview:
+  ```shell
+    pnpm run build && pnpm run preview
+    ```
