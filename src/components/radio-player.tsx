@@ -32,24 +32,9 @@ export const RadioPlayer = forwardRef<RadioPlayerHandleProps, RadioPlayerProps>(
     const handlePlay = async () => {
       if (isHls && audioRefHLS.current) {
         try {
-          if (audioRefHLS.current.readyState < 3) {
-            await new Promise((resolve, reject) => {
-              const onCanPlay = () => {
-                audioRefHLS.current?.removeEventListener('canplay', onCanPlay)
-                resolve(true)
-              }
-
-              const onError = () => {
-                audioRefHLS.current?.removeEventListener('error', onError)
-                reject(new Error('Error while loading audio'))
-              }
-
-              audioRefHLS.current?.addEventListener('canplay', onCanPlay)
-              audioRefHLS.current?.addEventListener('error', onError)
-            })
-          }
-
-          await audioRefHLS.current.play()
+          setTimeout(async () => {
+            await audioRefHLS.current?.play()
+          }, 1000)
         } catch (err) {
           console.log(err)
           toast.error('Error when playing.')
