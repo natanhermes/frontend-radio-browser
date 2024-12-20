@@ -165,7 +165,7 @@ export function CardRadio({
       <RadioPlayer
         ref={radioPlayerRef}
         paused={paused}
-        url={radio.url_resolved}
+        url={radio.url_resolved.replace('http://', 'https://')}
       />
     </div>
   )
