@@ -25,6 +25,8 @@ export const RadioPlayer = forwardRef<RadioPlayerHandleProps, RadioPlayerProps>(
     const [playingMp3, setPlayingMp3] = useState(false)
     const audioRefHLS = useRef<HTMLAudioElement | null>(null)
 
+    const transformedUrl = `${process.env.REACT_APP_STREAM_PROXY_URL}?url=${encodeURIComponent(url)}`
+
     useEffect(() => {
       setIsHls(url.endsWith('.m3u8'))
     }, [url])
@@ -60,7 +62,7 @@ export const RadioPlayer = forwardRef<RadioPlayerHandleProps, RadioPlayerProps>(
     useEffect(() => {
       if (!paused && isHls && Hls.isSupported() && audioRefHLS.current) {
         const hls = new Hls()
-        hls.loadSource(url)
+        hls.loadSource(transformedUrl)
         hls.attachMedia(audioRefHLS.current)
 
         hls.on(Hls.Events.ERROR, (_, data) => {
@@ -73,9 +75,9 @@ export const RadioPlayer = forwardRef<RadioPlayerHandleProps, RadioPlayerProps>(
       } else if (
         audioRefHLS.current?.canPlayType('application/vnd.apple.mpegurl')
       ) {
-        audioRefHLS.current.src = url
+        audioRefHLS.current.src = transformedUrl
       }
-    }, [isHls, url, paused])
+    }, [isHls, transformedUrl, paused])
 
     return (
       <div className="hidden">
@@ -84,7 +86,7 @@ export const RadioPlayer = forwardRef<RadioPlayerHandleProps, RadioPlayerProps>(
             Seu navegador não suporta HLS.
           </audio>
         ) : (
-          <ReactHowler src={url} html5 playing={playingMp3} />
+          <ReactHowler src={transformedUrl} html5 playing={playingMp3} />
         )}
       </div>
     )
