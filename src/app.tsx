@@ -14,7 +14,9 @@ export function App() {
     <HelmetProvider>
       <Helmet titleTemplate="%s | Radio Browser" />
       <QueryClientProvider client={queryClient}>
+        <RadioStationProvider>
           <RouterProvider router={router} />
+        </RadioStationProvider>
       </QueryClientProvider>
       <Toaster
         richColors
