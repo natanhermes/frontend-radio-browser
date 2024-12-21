@@ -19,7 +19,7 @@ export async function getRadioStations({
     let response = await api.post<
       RadioStationInfo[],
       AxiosResponse<RadioStationInfo[]>
-    >(`/search?limit=${limit}`, {
+    >(`/search?limit=${limit}&hidebroken=${true}`, {
       name: params?.searchQuery,
       offset: params?.offset,
     })
@@ -28,7 +28,7 @@ export async function getRadioStations({
       response = await api.post<
         RadioStationInfo[],
         AxiosResponse<RadioStationInfo[]>
-      >(`/search?limit=${limit}`, {
+      >(`/search?limit=${limit}&hidebroken=${true}`, {
         country: params?.searchQuery,
         offset: params?.offset,
       })
@@ -38,7 +38,7 @@ export async function getRadioStations({
       response = await api.post<
         RadioStationInfo[],
         AxiosResponse<RadioStationInfo[]>
-      >(`/search?limit=${limit}`, {
+      >(`/search?limit=${limit}&hidebroken=${true}`, {
         language: params?.searchQuery,
         offset: params?.offset,
       })
@@ -46,7 +46,7 @@ export async function getRadioStations({
 
     return response.data
   } catch (error) {
-    console.error('Erro ao buscar estações de rádio:', error)
+    console.error('search radio stations error:', error)
     return []
   }
 }
