@@ -26,9 +26,8 @@ const handler: Handler = async (
       response.headers['content-type'] || 'application/octet-stream'
     const isM3U8 = contentType.includes('application/vnd.apple.mpegurl')
 
-    let body = ''
     if (isM3U8) {
-      body = await streamToString(response.data)
+      let body = await streamToString(response.data)
       const baseUrl = new URL(sourceUrl)
 
       body = body.replace(
@@ -65,14 +64,15 @@ const handler: Handler = async (
         'Access-Control-Allow-Methods': 'GET, OPTIONS',
         'Access-Control-Allow-Headers': 'Content-Type, X-Requested-With',
       },
-      body: buffer.toString('utf8'),
+      isBase64Encoded: true,
+      body: buffer.toString('base64'),
     }
   } catch (error) {
-    console.error('error when accessing URL:', error)
+    console.error('Error when accessing URL:', error)
 
     return {
       statusCode: 500,
-      body: JSON.stringify({ error: 'error accessing source stream.' }),
+      body: JSON.stringify({ error: 'Error accessing source stream.' }),
     }
   }
 }
