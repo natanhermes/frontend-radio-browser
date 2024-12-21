@@ -10,7 +10,6 @@ import { toast } from 'sonner'
 
 interface RadioPlayerProps {
   url: string
-  paused: boolean
 }
 
 export interface RadioPlayerHandleProps {
@@ -19,32 +18,60 @@ export interface RadioPlayerHandleProps {
 }
 
 export const RadioPlayer = forwardRef<RadioPlayerHandleProps, RadioPlayerProps>(
-  ({ url, paused }, ref) => {
+  ({ url }, ref) => {
     const [isHls, setIsHls] = useState(false)
     const audioRef = useRef<HTMLAudioElement | null>(null)
+    const hlsInstance = useRef<Hls | null>(null)
+
+    useEffect(() => {
+      setIsHls(url.endsWith('.m3u8'))
+    }, [url])
+
+    const initializeHls = () => {
+      if (Hls.isSupported() && audioRef.current) {
+        const hls = new Hls()
+        hls.loadSource(url)
+        hls.attachMedia(audioRef.current)
+        hls.on(Hls.Events.ERROR, (_, data) => {
+          console.error('HLS Error:', data)
+          toast.error('An error occurred while playing the radio.')
+        })
+        hlsInstance.current = hls
+      } else if (
+        audioRef.current?.canPlayType('application/vnd.apple.mpegurl')
+      ) {
+        audioRef.current.src = url
+      }
+    }
 
     const handlePlay = async () => {
-      if (audioRef.current) {
-        try {
-          if (isHls && paused) {
-            setTimeout(async () => {
-              await audioRef.current?.play()
-            }, 1000)
-          } else {
-            audioRef.current.play()
+      try {
+        if (isHls) {
+          if (!hlsInstance.current) {
+            initializeHls()
           }
-        } catch (err) {
-          const error = err as Error
-          console.error(err)
-          toast.error('An error occurred while selecting the radio.', {
-            description: error.message,
-          })
+        } else {
+          if (audioRef.current && audioRef.current.src !== url) {
+            audioRef.current.src = url
+          }
         }
+        await audioRef.current?.play()
+      } catch (err) {
+        console.error(err)
+        toast.error('An error occurred while playing the radio.', {
+          description: (err as Error).message,
+        })
       }
     }
 
     const handlePause = () => {
-      audioRef.current?.pause()
+      if (audioRef.current) {
+        audioRef.current.pause()
+      }
+      if (hlsInstance.current) {
+        hlsInstance.current.destroy()
+        hlsInstance.current = null
+      }
     }
 
     useImperativeHandle(ref, () => ({
@@ -53,33 +80,21 @@ export const RadioPlayer = forwardRef<RadioPlayerHandleProps, RadioPlayerProps>(
     }))
 
     useEffect(() => {
-      setIsHls(url.endsWith('.m3u8'))
-    }, [url])
-
-    useEffect(() => {
-      if (isHls && audioRef.current && Hls.isSupported()) {
-        const hls = new Hls()
-        hls.loadSource(url)
-        hls.attachMedia(audioRef.current)
-
-        hls.on(Hls.Events.ERROR, (_, data) => {
-          console.error('HLS Error:', data)
-          toast.error('Failed to connect to the radio station.')
-        })
-
-        return () => {
-          hls.destroy()
-        }
-      } else if (!isHls && audioRef.current) {
+      if (isHls) {
+        initializeHls()
+      } else if (audioRef.current) {
         audioRef.current.src = url
+      }
+
+      return () => {
+        if (hlsInstance.current) {
+          hlsInstance.current.destroy()
+          hlsInstance.current = null
+        }
       }
     }, [isHls, url])
 
-    return (
-      <div className="hidden">
-        <audio ref={audioRef} controls />
-      </div>
-    )
+    return <audio ref={audioRef} className="hidden" controls />
   },
 )
 

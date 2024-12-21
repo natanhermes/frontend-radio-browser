@@ -92,7 +92,7 @@ export function CardRadio({
           <Button
             variant="default"
             size="icon"
-            className={cn('h-7 w-7')}
+            className={cn('h-7 w-8')}
             onClick={handlePlayPause}
           >
             <Pause />
@@ -101,7 +101,7 @@ export function CardRadio({
           <Button
             variant="default"
             size="icon"
-            className={cn('h-7 w-7')}
+            className={cn('h-7 w-8')}
             onClick={handlePlayPause}
           >
             {paused ? <Play /> : <Pause />}
@@ -131,11 +131,11 @@ export function CardRadio({
             </>
           ) : (
             <>
-              <span className="font-semibold leading-3 tracking-tight">
+              <span className="text-sm font-semibold leading-3 tracking-tight md:text-base">
                 {radio?.name.trim() || 'No name available'}
               </span>
               {!playingNow && (
-                <span className="font-extralight leading-3 tracking-tight">
+                <span className="text-sm font-extralight leading-3 tracking-tight md:text-base">
                   {radio.country} - {radio?.tags || 'No tags available'}
                 </span>
               )}
@@ -162,11 +162,7 @@ export function CardRadio({
         )}
       </div>
 
-      <RadioPlayer
-        ref={radioPlayerRef}
-        paused={paused}
-        url={radio.url_resolved}
-      />
+      <RadioPlayer ref={radioPlayerRef} url={radio.url_resolved} />
     </div>
   )
 }
