@@ -38,7 +38,8 @@ export function FavoriteRadioStations({ radios }: FavoriteRadiosProps) {
         {radioPlayingNow ? (
           <div className="flex items-center justify-around">
             <div>
-              <span className="font-semibold leading-3 tracking-tight">
+              Playing now:
+              <span className="font-semibold leading-3 tracking-tight text-primary">
                 {radioPlayingNow?.name}
               </span>
             </div>
