@@ -9,6 +9,8 @@ import {
 import ReactHowler from 'react-howler'
 import { toast } from 'sonner'
 
+import { env } from '@/env'
+
 interface RadioPlayerProps {
   url: string
   paused: boolean
@@ -57,10 +59,12 @@ export const RadioPlayer = forwardRef<RadioPlayerHandleProps, RadioPlayerProps>(
       handlePause,
     }))
 
+    const proxyUrl = `${env.VITE_REACT_APP_STREAM_PROXY_URL}?url=${encodeURIComponent(url)}`
+
     useEffect(() => {
       if (!paused && isHls && Hls.isSupported() && audioRefHLS.current) {
         const hls = new Hls()
-        hls.loadSource(url)
+        hls.loadSource(proxyUrl)
         hls.attachMedia(audioRefHLS.current)
 
         hls.on(Hls.Events.ERROR, (_, data) => {
@@ -73,9 +77,9 @@ export const RadioPlayer = forwardRef<RadioPlayerHandleProps, RadioPlayerProps>(
       } else if (
         audioRefHLS.current?.canPlayType('application/vnd.apple.mpegurl')
       ) {
-        audioRefHLS.current.src = url
+        audioRefHLS.current.src = proxyUrl
       }
-    }, [isHls, url, paused])
+    }, [isHls, proxyUrl, paused])
 
     return (
       <div className="hidden">
@@ -84,7 +88,7 @@ export const RadioPlayer = forwardRef<RadioPlayerHandleProps, RadioPlayerProps>(
             Seu navegador não suporta HLS.
           </audio>
         ) : (
-          <ReactHowler src={url} html5 playing={playingMp3} />
+          <ReactHowler src={proxyUrl} html5 playing={playingMp3} />
         )}
       </div>
     )
