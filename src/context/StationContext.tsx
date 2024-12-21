@@ -45,6 +45,10 @@ export const RadioStationProvider = ({ children }: { children: ReactNode }) => {
   }
 
   const addRadioToFavorites = async (radioStation: RadioStationInfo) => {
+    if (radioStation?.bitrate === 0) {
+      throw new Error('This radio station is currently offline.')
+    }
+
     await updateRadioStation(radioStation)
     setFavoriteRadioStations((prev) => [...prev, radioStation])
   }
