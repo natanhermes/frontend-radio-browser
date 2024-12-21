@@ -107,7 +107,7 @@ export function CardRadio({
             {paused ? <Play /> : <Pause />}
           </Button>
         )}
-        <div className="flex w-full flex-col justify-center gap-1">
+        <div className="flex w-full flex-col justify-center gap-2">
           {isEditing ? (
             <>
               <Input
@@ -132,11 +132,11 @@ export function CardRadio({
           ) : (
             <>
               <span className="font-semibold leading-3 tracking-tight">
-                {radio?.name}
+                {radio?.name.trim() || 'No name available'}
               </span>
               {!playingNow && (
                 <span className="font-extralight leading-3 tracking-tight">
-                  {radio?.tags}
+                  {radio.country} - {radio?.tags || 'No tags available'}
                 </span>
               )}
             </>

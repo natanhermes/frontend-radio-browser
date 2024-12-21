@@ -44,11 +44,12 @@ export function AppSidebar() {
     }
     toast.promise(addRadioToFavorites(radio), {
       success: 'successfully favorited radio',
+      error: 'This radio station is currently offline.',
     })
   }
 
   const validateEmptyStationName = (stationName: string) => {
-    return stationName.trim() === '' ? 'no name' : stationName
+    return stationName.trim() === '' ? 'no name available' : stationName
   }
 
   const isFavorite = (radio: RadioStationInfo) =>

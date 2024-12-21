@@ -18,12 +18,7 @@ export function App() {
           <RouterProvider router={router} />
         </RadioStationProvider>
       </QueryClientProvider>
-      <Toaster
-        richColors
-        closeButton
-        position="bottom-right"
-        visibleToasts={1}
-      />
+      <Toaster richColors closeButton position="top-right" visibleToasts={1} />
     </HelmetProvider>
   )
 }
