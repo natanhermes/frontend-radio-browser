@@ -1,5 +1,5 @@
 import Hls from 'hls.js'
-import React, {
+import {
   forwardRef,
   useEffect,
   useImperativeHandle,
